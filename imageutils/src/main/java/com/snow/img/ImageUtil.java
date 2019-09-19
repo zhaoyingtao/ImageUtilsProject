@@ -68,6 +68,9 @@ public class ImageUtil {
         }
     }
 
+    public static void imageLoadCircle(Context mContext, String url, ImageView imageView) {
+        imageLoadCircle(mContext, url, imageView, -1);
+    }
 
     /**
      * 使用Glide加载圆形图片
@@ -97,17 +100,17 @@ public class ImageUtil {
     /**
      * 加载圆角图片 ====建议直接使用这个
      */
-    public static void imageLoadFillet(Context mContext, String url, int filletSize, ImageView imageView) {
-        imageLoadFillet(mContext, url, filletSize, imageView, ImageFilletDirection.All, -1);
+    public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize) {
+        imageLoadFillet(mContext, url, imageView, filletSize, ImageFilletDirection.All, -1);
     }
 
-    public static void imageLoadFillet(Context mContext, String url, int filletSize, ImageView imageView, int defaultPic) {
-        imageLoadFillet(mContext, url, filletSize, imageView, ImageFilletDirection.All, -1);
+    public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize, int defaultPic) {
+        imageLoadFillet(mContext, url, imageView, filletSize, ImageFilletDirection.All, defaultPic);
     }
 
-    public static void imageLoadFillet(Context mContext, String url, int filletSize, ImageView imageView,
+    public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize,
                                        ImageFilletDirection direction) {
-        imageLoadFillet(mContext, url, filletSize, imageView, direction, -1);
+        imageLoadFillet(mContext, url, imageView, filletSize, direction, -1);
     }
 
     /**
@@ -120,7 +123,7 @@ public class ImageUtil {
      * @param imageView
      * @param defaultPic
      */
-    public static void imageLoadFillet(Context mContext, String url, int filletSize, ImageView imageView, ImageFilletDirection direction,
+    public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize, ImageFilletDirection direction,
                                        int defaultPic) {
         if (imageView == null || mContext == null) {
             return;
@@ -151,44 +154,12 @@ public class ImageUtil {
                 .error(defaultPic)
                 .skipMemoryCache(false)
                 .diskCacheStrategy(DiskCacheStrategy.DATA);
-        Glide.with(mContext).load(url).apply(options).into(imageView);
-    }
+        if (url.startsWith("http")) {//网络图片
+            Glide.with(mContext).load(url).apply(options).into(imageView);
+        } else {//本地图片
+            Glide.with(mContext).load(new File(url)).apply(options).into(imageView);
 
-    /**
-     * 加载圆角图片 ====建议直接使用这个
-     *
-     * @param mContext
-     * @param file
-     * @param filletSize 圆角大小 dp
-     * @param direction  圆角方向 超过这几种也是圆角 0 四个圆角 1 左圆角 2 上圆角 3 右圆角 4 下圆角 5 四个直角
-     * @param imageView
-     * @param defaultPic
-     */
-    public static void imageLoadFillet(Context mContext, File file, int filletSize, int direction,
-                                       ImageView imageView, int defaultPic) {
-        if (imageView == null || mContext == null) {
-            return;
         }
-        CornerTransform transformation = new CornerTransform(mContext, filletSize);
-        if (direction == 1) {
-            transformation.setExceptCorner(false, true, false, true);
-        } else if (direction == 2) {
-            transformation.setExceptCorner(false, false, true, true);
-        } else if (direction == 3) {
-            transformation.setExceptCorner(true, false, true, false);
-        } else if (direction == 4) {
-            transformation.setExceptCorner(true, true, false, false);
-        } else if (direction == 5) {
-            transformation.setExceptCorner(true, true, true, true);
-        } else {
-            transformation.setExceptCorner(false, false, false, false);
-        }
-        RequestOptions options = RequestOptions.bitmapTransform(transformation)
-                .placeholder(defaultPic)
-                .error(defaultPic)
-                .skipMemoryCache(false)
-                .diskCacheStrategy(DiskCacheStrategy.DATA);
-        Glide.with(mContext).load(file).apply(options).into(imageView);
     }
 
 
@@ -219,7 +190,7 @@ public class ImageUtil {
     }
 
     /**
-     * 通过URL加载获得Drawable文件，可以设置布局背景
+     * 通过URL加载获得Drawable文件，可以设置任意布局背景
      *
      * @param mContext
      * @param imgUrl
