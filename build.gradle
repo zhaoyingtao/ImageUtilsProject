@@ -19,7 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        mavenCentral()
+        maven { url 'https://dl.bintray.com/zhaoyingtao/maven' }
     }
 }
 // 指定javadoc UTF-8格式
