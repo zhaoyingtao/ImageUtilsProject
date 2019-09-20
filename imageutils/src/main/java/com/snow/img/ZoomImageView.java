@@ -27,7 +27,7 @@ import java.util.Queue;
  * 不允许设置scaleType，只能用内部设置的matrix
  */
 
-public class PinchImageView extends AppCompatImageView {
+public class ZoomImageView extends AppCompatImageView {
 
 
     ////////////////////////////////配置参数////////////////////////////////
@@ -45,7 +45,7 @@ public class PinchImageView extends AppCompatImageView {
     /**
      * 图片最大放大比例
      */
-    private static final float MAX_SCALE = 4f;
+    private float max_scale = 4f;
 
 
     ////////////////////////////////监听器////////////////////////////////
@@ -71,6 +71,15 @@ public class PinchImageView extends AppCompatImageView {
 
     public void setCanScale(boolean canScale) {
         this.canScale = canScale;
+    }
+
+    /**
+     * 设置最大缩放倍数
+     *
+     * @param maxScaleSize
+     */
+    public void setMaxScale(float maxScaleSize) {
+        this.max_scale = max_scale;
     }
 
     @Override
@@ -264,7 +273,7 @@ public class PinchImageView extends AppCompatImageView {
      */
     @Override
     public boolean canScrollHorizontally(int direction) {
-        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE) {
+        if (mPinchMode == ZoomImageView.PINCH_MODE_SCALE) {
             return true;
         }
         RectF bound = getImageBound(null);
@@ -289,7 +298,7 @@ public class PinchImageView extends AppCompatImageView {
      */
     @Override
     public boolean canScrollVertically(int direction) {
-        if (mPinchMode == PinchImageView.PINCH_MODE_SCALE) {
+        if (mPinchMode == ZoomImageView.PINCH_MODE_SCALE) {
             return true;
         }
         RectF bound = getImageBound(null);
@@ -414,12 +423,12 @@ public class PinchImageView extends AppCompatImageView {
          * 外部矩阵的任何变化后都收到此回调.
          * 外部矩阵变化后,总变化矩阵,图片的展示位置都将发生变化.
          *
-         * @param pinchImageView
+         * @param zoomImageView
          * @see #getOuterMatrix(Matrix)
          * @see #getCurrentImageMatrix(Matrix)
          * @see #getImageBound(RectF)
          */
-        void onOuterMatrixChanged(PinchImageView pinchImageView);
+        void onOuterMatrixChanged(ZoomImageView zoomImageView);
     }
 
     /**
@@ -554,7 +563,7 @@ public class PinchImageView extends AppCompatImageView {
      * @see #doubleTap(float, float)
      */
     protected float getMaxScale() {
-        return MAX_SCALE;
+        return max_scale;
     }
 
     /**
@@ -571,8 +580,8 @@ public class PinchImageView extends AppCompatImageView {
      */
     protected float calculateNextScale(float innerScale, float outerScale) {
         float currentScale = innerScale * outerScale;
-        if (currentScale < MAX_SCALE) {
-            return MAX_SCALE;
+        if (currentScale < max_scale) {
+            return max_scale;
         } else {
             return innerScale;
         }
@@ -581,17 +590,17 @@ public class PinchImageView extends AppCompatImageView {
 
     ////////////////////////////////初始化////////////////////////////////
 
-    public PinchImageView(Context context) {
+    public ZoomImageView(Context context) {
         super(context);
         initView();
     }
 
-    public PinchImageView(Context context, AttributeSet attrs) {
+    public ZoomImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public PinchImageView(Context context, AttributeSet attrs, int defStyle) {
+    public ZoomImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
@@ -785,7 +794,7 @@ public class PinchImageView extends AppCompatImageView {
      * <p>
      * 在onTouchEvent末尾被执行.
      */
-    private GestureDetector mGestureDetector = new GestureDetector(PinchImageView.this.getContext(), new GestureDetector.SimpleOnGestureListener() {
+    private GestureDetector mGestureDetector = new GestureDetector(ZoomImageView.this.getContext(), new GestureDetector.SimpleOnGestureListener() {
 
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             //只有在单指模式结束之后才允许执行fling
@@ -798,7 +807,7 @@ public class PinchImageView extends AppCompatImageView {
         public void onLongPress(MotionEvent e) {
             //触发长按
             if (mOnLongClickListener != null) {
-                mOnLongClickListener.onLongClick(PinchImageView.this);
+                mOnLongClickListener.onLongClick(ZoomImageView.this);
             }
         }
 
@@ -813,7 +822,7 @@ public class PinchImageView extends AppCompatImageView {
         public boolean onSingleTapConfirmed(MotionEvent e) {
             //触发点击
             if (mOnClickListener != null) {
-                mOnClickListener.onClick(PinchImageView.this);
+                mOnClickListener.onClick(ZoomImageView.this);
             }
             return true;
         }
@@ -826,8 +835,8 @@ public class PinchImageView extends AppCompatImageView {
         int action = event.getAction() & MotionEvent.ACTION_MASK;
         if (!canScale) {
             if (action == MotionEvent.ACTION_DOWN) {
-                if (mOnClickListener!=null){
-                    mOnClickListener.onClick(PinchImageView.this);
+                if (mOnClickListener != null) {
+                    mOnClickListener.onClick(ZoomImageView.this);
                 }
             }
             return true;
