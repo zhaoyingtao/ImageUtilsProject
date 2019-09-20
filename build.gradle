@@ -21,10 +21,6 @@ allprojects {
         jcenter()
         maven { url 'https://dl.bintray.com/zhaoyingtao/maven' }
     }
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-        options.addStringOption('encoding', 'UTF-8')
-    }
 }
 // 指定javadoc UTF-8格式
 task javadoc(type: Javadoc) {
