@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    //忽略警告
+    lintOptions {
+        abortOnError false
+    }
 }
 publish {
     userOrg = 'zhaoyingtao'
