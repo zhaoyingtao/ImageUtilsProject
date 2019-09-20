@@ -424,9 +424,6 @@ public class ZoomImageView extends AppCompatImageView {
          * 外部矩阵变化后,总变化矩阵,图片的展示位置都将发生变化.
          *
          * @param zoomImageView
-         * @see #getOuterMatrix(Matrix)
-         * @see #getCurrentImageMatrix(Matrix)
-         * @see #getImageBound(RectF)
          */
         void onOuterMatrixChanged(ZoomImageView zoomImageView);
     }
