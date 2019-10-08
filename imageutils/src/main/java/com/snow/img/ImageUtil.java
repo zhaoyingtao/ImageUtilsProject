@@ -1,9 +1,12 @@
 package com.snow.img;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -53,7 +56,7 @@ public class ImageUtil {
      * @param defaultPic 默认图片可接收 R.mipmap.xxx   R.color.xxx  R.drawable.xxx
      */
     public static void imageLoad(Context mContext, String url, ImageView imageView, boolean isUseCache, int defaultPic) {
-        if (imageView == null || mContext == null) {
+        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
             return;
         }
         RequestOptions options = new RequestOptions()
@@ -81,7 +84,7 @@ public class ImageUtil {
      * @param defaultPic 默认图片,加载出错  可接收 R.mipmap.xxx   R.color.xxx  R.drawable.xxx
      */
     public static void imageLoadCircle(Context mContext, String url, ImageView imageView, int defaultPic) {
-        if (imageView == null || mContext == null) {
+        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
             return;
         }
         RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop())
@@ -125,7 +128,7 @@ public class ImageUtil {
      */
     public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize, ImageFilletDirection direction,
                                        int defaultPic) {
-        if (imageView == null || mContext == null) {
+        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
             return;
         }
         CornerTransform transformation = new CornerTransform(mContext, filletSize);
@@ -171,6 +174,9 @@ public class ImageUtil {
      * @param loopTimes   循环次数 GlideDrawable.LOOP_INTRINSIC／GlideDrawable.LOOP_FOREVER／大于0的数
      */
     public static void imageLoadGif(Context mContext, int gifDrawable, ImageView imageView, final int loopTimes) {
+        if (mContext == null || imageView == null) {
+            return;
+        }
         Glide.with(mContext).load(gifDrawable).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
@@ -197,6 +203,9 @@ public class ImageUtil {
      * @param drawableListener
      */
     public static void imageLoadUrlToDrawable(Context mContext, String imgUrl, final LoadUrlToDrawableListener drawableListener) {
+        if (mContext == null || TextUtils.isEmpty(imgUrl)) {
+            return;
+        }
         Glide.with(mContext)
                 .asDrawable()//强制Glide返回一个Drawable对象
                 .load(imgUrl)
@@ -209,6 +218,34 @@ public class ImageUtil {
                         }
                     }
                 });
+    }
+
+    /**
+     * 通过URL加载获得Bitmap文件
+     *
+     * @param mContext
+     * @param imgUrl
+     * @param drawableListener
+     */
+    public static void imageLoadUrlToBitmap(Context mContext, String imgUrl, final LoadUrlToBitmapListener drawableListener) {
+        if (mContext == null || TextUtils.isEmpty(imgUrl)) {
+            return;
+        }
+        Glide.with(mContext)
+                .asBitmap()//强制Glide返回一个Bitmap对象
+                .load(imgUrl)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        if (drawableListener != null) {
+                            drawableListener.imageBitmap(resource);
+                        }
+                    }
+                });
+    }
+
+    public interface LoadUrlToBitmapListener {
+        void imageBitmap(Bitmap resource);
     }
 
     public interface LoadUrlToDrawableListener {
