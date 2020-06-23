@@ -2,20 +2,18 @@ package com.snow.imgd;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.snow.img.ImageFilletDirection;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.snow.img.ImageUtil;
-import com.snow.img.ZoomImageView;
 
 public class MainActivity extends AppCompatActivity {
-    private String imgUrl = "http://pic16.nipic.com/20111006/6239936_092702973000_2.jpg";
+    private String imgUrl = "http://b-ssl.duitang.com/uploads/item/201804/30/20180430215916_zrwau.jpg";
     public static final String TEST_IMAGE = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561094715086&di=619ebeb53d8024d675f52f09ff59916f&imgtype=0&src=http%3A%2F%2Fpic22.nipic.com%2F20120626%2F7755371_230304612000_2.jpg";
     ImageView imageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imageViews = findViewById(R.id.imageView_bitmap);
                 imageViews.setImageBitmap(resource);
             }
-
         });
         //加载圆图片
 //        ImageUtil.imageLoadCircle(this, imgUrl,imageView);

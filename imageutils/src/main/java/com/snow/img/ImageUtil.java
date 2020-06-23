@@ -1,17 +1,15 @@
 package com.snow.img;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -35,15 +33,7 @@ public class ImageUtil {
      * 使用Glide加载图片==正常，方形
      */
     public static void imageLoad(Context mContext, String url, ImageView imageView) {
-        imageLoad(mContext, url, imageView, false, -1);
-    }
-
-    public static void imageLoad(Context mContext, String url, ImageView imageView, boolean isUseCache) {
-        imageLoad(mContext, url, imageView, isUseCache, -1);
-    }
-
-    public static void imageLoad(Context mContext, String url, ImageView imageView, int defaultPic) {
-        imageLoad(mContext, url, imageView, false, defaultPic);
+        imageLoad(mContext, url, imageView, -1);
     }
 
     /**
@@ -52,18 +42,15 @@ public class ImageUtil {
      * @param mContext
      * @param url        图片地址
      * @param imageView  显示的ImageView
-     * @param isUseCache 是否使用缓存
      * @param defaultPic 默认图片可接收 R.mipmap.xxx   R.color.xxx  R.drawable.xxx
      */
-    public static void imageLoad(Context mContext, String url, ImageView imageView, boolean isUseCache, int defaultPic) {
-        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
+    public static void imageLoad(Context mContext, String url, ImageView imageView, int defaultPic) {
+        if (imageView == null || verificationNull(mContext,url)) {
             return;
         }
         RequestOptions options = new RequestOptions()
                 .placeholder(defaultPic)
-                .error(defaultPic)
-                .skipMemoryCache(isUseCache)
-                .diskCacheStrategy(DiskCacheStrategy.DATA);
+                .error(defaultPic);
         if (url.startsWith("http")) {//网络图片
             Glide.with(mContext).load(url).apply(options).into(imageView);
         } else {//本地图片
@@ -84,19 +71,16 @@ public class ImageUtil {
      * @param defaultPic 默认图片,加载出错  可接收 R.mipmap.xxx   R.color.xxx  R.drawable.xxx
      */
     public static void imageLoadCircle(Context mContext, String url, ImageView imageView, int defaultPic) {
-        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
+        if (imageView == null || verificationNull(mContext,url)) {
             return;
         }
         RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop())
                 .placeholder(defaultPic)
-                .error(defaultPic)
-                .skipMemoryCache(false)
-                .diskCacheStrategy(DiskCacheStrategy.DATA);
+                .error(defaultPic);
         if (url.startsWith("http")) {//网络图片
             Glide.with(mContext).load(url).apply(options).into(imageView);
         } else {//本地图片
             Glide.with(mContext).load(new File(url)).apply(options).into(imageView);
-
         }
     }
 
@@ -128,7 +112,7 @@ public class ImageUtil {
      */
     public static void imageLoadFillet(Context mContext, String url, ImageView imageView, int filletSize, ImageFilletDirection direction,
                                        int defaultPic) {
-        if (imageView == null || mContext == null || TextUtils.isEmpty(url)) {
+        if (imageView == null ||verificationNull(mContext,url)) {
             return;
         }
         CornerTransform transformation = new CornerTransform(mContext, filletSize);
@@ -154,14 +138,11 @@ public class ImageUtil {
         }
         RequestOptions options = RequestOptions.bitmapTransform(transformation)
                 .placeholder(defaultPic)
-                .error(defaultPic)
-                .skipMemoryCache(false)
-                .diskCacheStrategy(DiskCacheStrategy.DATA);
+                .error(defaultPic);
         if (url.startsWith("http")) {//网络图片
             Glide.with(mContext).load(url).apply(options).into(imageView);
         } else {//本地图片
             Glide.with(mContext).load(new File(url)).apply(options).into(imageView);
-
         }
     }
 
@@ -203,7 +184,7 @@ public class ImageUtil {
      * @param drawableListener
      */
     public static void imageLoadUrlToDrawable(Context mContext, String imgUrl, final LoadUrlToDrawableListener drawableListener) {
-        if (mContext == null || TextUtils.isEmpty(imgUrl)) {
+        if (verificationNull(mContext,imgUrl)) {
             return;
         }
         Glide.with(mContext)
@@ -228,7 +209,7 @@ public class ImageUtil {
      * @param drawableListener
      */
     public static void imageLoadUrlToBitmap(Context mContext, String imgUrl, final LoadUrlToBitmapListener drawableListener) {
-        if (mContext == null || TextUtils.isEmpty(imgUrl)) {
+        if (verificationNull(mContext,imgUrl)) {
             return;
         }
         Glide.with(mContext)
@@ -244,6 +225,24 @@ public class ImageUtil {
                 });
     }
 
+    /**
+     * 验证是否为空或者activity已经关闭
+     * @param mContext
+     * @param imgUrl
+     * @return
+     */
+    private static boolean verificationNull(Context mContext, String imgUrl) {
+        if (mContext == null || TextUtils.isEmpty(imgUrl)) {
+            return true;
+        }
+        if (mContext instanceof Activity) {
+            if (((Activity) mContext).isDestroyed()) {
+                return true;
+            }
+        }
+        return false;
+
+    }
     public interface LoadUrlToBitmapListener {
         void imageBitmap(Bitmap resource);
     }

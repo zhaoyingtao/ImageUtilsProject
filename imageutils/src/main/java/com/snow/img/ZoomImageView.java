@@ -6,13 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
