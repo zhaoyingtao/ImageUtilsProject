@@ -11,8 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.snow.img.ImageUtil;
 
 public class MainActivity extends AppCompatActivity {
-    private String imgUrl = "http://b-ssl.duitang.com/uploads/item/201804/30/20180430215916_zrwau.jpg";
-    public static final String TEST_IMAGE = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561094715086&di=619ebeb53d8024d675f52f09ff59916f&imgtype=0&src=http%3A%2F%2Fpic22.nipic.com%2F20120626%2F7755371_230304612000_2.jpg";
+//    private String imgUrl = "http://b-ssl.duitang.com/uploads/item/201804/30/20180430215916_zrwau.jpg";
+    private String imgUrl = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F611%2F031213123016%2F130312123016-3-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1646964747&t=20c4a59aff7bf7eeaeadfdc82ae222c5";
+    public static final String TEST_IMAGE = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F611%2F031213123016%2F130312123016-3-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1646964747&t=20c4a59aff7bf7eeaeadfdc82ae222c5";
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
